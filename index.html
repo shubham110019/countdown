@@ -1,118 +1,108 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
-
-    <style>
-        .txm-box{
-            display: flex !important;
-            position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-        }
-
-        .txm-box .txm-sct{
-            text-align: center;
-            margin: 0px 15px;
-        }
-
-        .txm-box .txm-sct span{
-            font-size: 30px;
-    font-weight: 800;
-        }
-    </style>
-  </head>
-  <body>
- 
-
-    <div class="txm-box" id="gettodaytime" data-date="2023-08-11"></div>
-
- 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-
-<script>
-
-jQuery(document).ready(function() {
-
-
-    jQuery(document).ready(function() {
-    function createTimerElement(id, label) {
-        var container = jQuery('<div class="txm-sct"></div>');
-        var digitsContainer = jQuery('<div id="' + id + '"></div>');
-        
-        // Create separate span elements for each digit
-        for (var i = 0; i < 2; i++) {
-            var digitSpan = jQuery('<span>0</span>');
-            digitsContainer.append(digitSpan);
-        }
-        
-        var text = jQuery('<div class="tm">' + label + '</div>');
-        container.append(digitsContainer).append(text);
-        return container;
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <title>Hello, world!</title>
+  <style>
+    .txm-box {
+      display: flex !important;
     }
 
-    jQuery(".txm-box")
+    .txm-box .txm-sct {
+      text-align: center;
+      margin: 0px 15px;
+    }
+
+    .txm-box .txm-sct span {
+      font-size: 30px;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="txm-box timbox" data-date="2023-08-30"></div>
+  <div class="txm-box timbox" data-date="2023-08-12"></div>
+  <div class="txm-box timbox" data-date="2023-08-14"></div>
+  <div class="txm-box timbox" data-date="2023-08-16"></div>
+  <div class="txm-box timbox" data-date="2023-08-17"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+  <script>
+    function createTimerElement(id, label) {
+      var container = $('<div class="txm-sct"></div>');
+      var digitsContainer = $('<div id="' + id + '"></div>');
+
+      for (var i = 0; i < 2; i++) {
+        var digitSpan = $('<span>0</span>');
+        digitsContainer.append(digitSpan);
+      }
+
+      var text = $('<div class="tm">' + label + '</div>');
+      container.append(digitsContainer).append(text);
+      return container;
+    }
+
+    function initializeTimer(timerElement, targetDate) {
+      $(timerElement)
         .append(createTimerElement("days", "Days"))
         .append(createTimerElement("hours", "Hours"))
         .append(createTimerElement("minutes", "Minutes"))
         .append(createTimerElement("seconds", "Seconds"));
-        
-    function updateTimer() {
+
+      var timer = setInterval(function () {
+        updateTimer(timerElement, targetDate);
+      }, 1000);
+
+      updateTimer(timerElement, targetDate);
+
+      function updateTimer(element, targetDate) {
         var currentDate = new Date();
         var remainingTime = targetDate - currentDate;
 
         if (remainingTime <= 0) {
-            clearInterval(timer);
-            updateDigitSpan("#days", 0);
-            updateDigitSpan("#hours", 0);
-            updateDigitSpan("#minutes", 0);
-            updateDigitSpan("#seconds", 0);
-            return;
+          clearInterval(timer);
+          updateDigitSpan(element, "#days", 0);
+          updateDigitSpan(element, "#hours", 0);
+          updateDigitSpan(element, "#minutes", 0);
+          updateDigitSpan(element, "#seconds", 0);
+          return;
         }
 
         var days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
         var hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-        
-        updateDigitSpan("#days", days);
-        updateDigitSpan("#hours", hours);
-        updateDigitSpan("#minutes", minutes);
-        updateDigitSpan("#seconds", seconds);
-    }
 
-    function updateDigitSpan(selector, value) {
-        var digitSpans = jQuery(selector + ' span');
+        updateDigitSpan(element, "#days", days);
+        updateDigitSpan(element, "#hours", hours);
+        updateDigitSpan(element, "#minutes", minutes);
+        updateDigitSpan(element, "#seconds", seconds);
+      }
+
+      function updateDigitSpan(element, selector, value) {
+        var digitSpans = $(element).find(selector + ' span');
         var valueStr = value.toString().padStart(2, '0');
-        
+
         for (var i = 0; i < valueStr.length; i++) {
-            digitSpans.eq(i).text(valueStr[i]);
+          digitSpans.eq(i).text(valueStr[i]);
         }
+      }
     }
-    
-    // var currentDate = new Date();
-    // var formattedDate = currentDate.toISOString().slice(0, 10);
-    // jQuery("#gettodaytime").attr("data-date", formattedDate);
-    var dataDate = jQuery("#gettodaytime").data("date");
-    var dataTime = '23:59:59';
-    var timeValue = dataDate + " " + dataTime;
-    var targetDate = new Date(timeValue.trim().toString());
-    var timer;
-    
-    updateTimer();
-    timer = setInterval(updateTimer, 1000);
-});
 
-});
-
-</script>
-
+    $(document).ready(function () {
+      $('.timbox').each(function () {
+        var dataDate = $(this).data("date");
+        var dataTime = '23:59:59';
+        var timeValue = dataDate + " " + dataTime;
+        var targetDate = new Date(timeValue.trim().toString());
+        initializeTimer(this, targetDate);
+      });
+    });
+  </script>
 </body>
 </html>
